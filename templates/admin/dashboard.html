@@ -3,91 +3,74 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <h2 class="mb-4">Admin Dashboard</h2>
-    
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <div class="card text-white bg-primary">
-                <div class="card-body">
-                    <h5 class="card-title">Total Books</h5>
-                    <p class="card-text display-4">{{ total_books }}</p>
-                    <a href="{{ url_for('admin_books') }}" class="text-white">View Books</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-success">
-                <div class="card-body">
-                    <h5 class="card-title">Total Orders</h5>
-                    <p class="card-text display-4">{{ total_orders }}</p>
-                    <a href="{{ url_for('admin_orders') }}" class="text-white">View Orders</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card text-white bg-info">
-                <div class="card-body">
-                    <h5 class="card-title">Total Users</h5>
-                    <p class="card-text display-4">{{ total_users }}</p>
-                    <a href="{{ url_for('admin_users') }}" class="text-white">View Users</a>
-                </div>
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">Total Books</h5>
+                <p class="card-text display-4">{{ total_books }}</p>
+                <a href="{{ url_for('admin_books') }}" class="text-white">View Books</a>
             </div>
         </div>
     </div>
-    
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Recent Orders</h5>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Date</th>
-                                    <th>Customer</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for order in recent_orders %}
-                                <tr>
-                                    <td><a href="{{ url_for('admin_order_detail', order_id=order._id) }}">{{ order._id|truncate(8) }}</a></td>
-                                    <td>{{ order.order_date.strftime('%Y-%m-%d') }}</td>
-                                    <td>{{ order.user_id }}</td>
-                                    <td>${{ "%.2f"|format(order.total_amount) }}</td>
-                                    <td>
-                                        <span class="badge bg-{{ 'success' if order.status == 'Completed' else 'warning' }}">
-                                            {{ order.status }}
-                                        </span>
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">Total Orders</h5>
+                <p class="card-text display-4">{{ total_orders }}</p>
+                <a href="{{ url_for('admin_orders') }}" class="text-white">View Orders</a>
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Quick Actions</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-grid gap-2">
-                        <a href="{{ url_for('admin_add_book') }}" class="btn btn-primary">Add New Book</a>
-                        <a href="{{ url_for('admin_books') }}" class="btn btn-secondary">Manage Books</a>
-                        <a href="{{ url_for('admin_orders') }}" class="btn btn-success">Manage Orders</a>
-                        <a href="{{ url_for('admin_users') }}" class="btn btn-info">Manage Users</a>
-                    </div>
-                </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">Total Users</h5>
+                <p class="card-text display-4">{{ total_users }}</p>
+                <a href="#" class="text-white">View Users</a>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5>Recent Orders</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Customer</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td>{{ order.order_id }}</td>
+                        <td>{{ order.customer_name }}</td>
+                        <td>{{ order.order_date.strftime('%Y-%m-%d') }}</td>
+                        <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                        <td>
+                            <span class="badge bg-{{ 'success' if order.status == 'Completed' else 'warning' }}">
+                                {{ order.status }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{{ url_for('admin_order_detail', order_id=order.order_id) }}" class="btn btn-sm btn-primary">View</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

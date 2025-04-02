@@ -6,6 +6,8 @@ from config import Config
 from datetime import datetime
 import os
 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '').replace('postgres://', 'postgresql://')
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)

@@ -177,6 +177,35 @@ def register_routes(app):
     # ========================
     # Authentication Routes
     # ========================
+    @app.cli.command('init-db')
+    def init_db_command():
+        """Initialize the database."""
+        db.create_all()
+    
+    # Create admin user if none exists
+        if not User.query.filter_by(is_admin=True).first():
+            admin = User(
+                name='Admin',
+                email='admin@bookstore.com',
+                password='admin123',  # Change this in production!
+                is_admin=True
+            )
+            db.session.add(admin)
+            db.session.commit()
+            print('Created admin user')
+    
+        print('Initialized the database.')
+
+# Then add to your create_app():
+    def create_app():
+        app = Flask(__name__)
+    # ... other config ...
+    
+        with app.app_context():
+            db.create_all()
+        # Optional: Call init_db_command() here if you want auto-init
+    
+        return app
     
     @app.route('/login', methods=['GET', 'POST'])
     def login():

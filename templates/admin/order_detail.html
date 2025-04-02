@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Order #{{ order.order_id }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Order Details</h1>
+        <a href="{{ url_for('admin_orders') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Orders
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Order #{{ order.order_id }}</h6>
+        </div>
+        <div class="card-body">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h5>Customer Information</h5>
+                    <p>
+                        <strong>Name:</strong> {{ order.customer_name }}<br>
+                        <strong>Email:</strong> {{ order.email }}<br>
+                        <strong>Address:</strong> {{ order.address }}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    <h5>Order Information</h5>
+                    <p>
+                        <strong>Date:</strong> {{ order.order_date.strftime('%Y-%m-%d %H:%M') }}<br>
+                        <strong>Status:</strong> 
+                        <span class="badge bg-{{ 'success' if order.status == 'Completed' else 'warning' }}">
+                            {{ order.status }}
+                        </span><br>
+                        <strong>Total:</strong> ${{ "%.2f"|format(order.total_amount) }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Book</th>
+                            <th>Author</th>
+                            <th>Price</th>
+                            <th>Quantity</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in items %}
+                        <tr>
+                            <td>{{ item.title }}</td>
+                            <td>{{ item.author }}</td>
+                            <td>${{ "%.2f"|format(item.price) }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ "%.2f"|format(item.price * item.quantity) }}</td>
+                        </tr>
+                        {% endfor %}
+                        <tr class="font-weight-bold">
+                            <td colspan="4" class="text-right">Total:</td>
+                            <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            {% if order.status != 'Completed' %}
+            <div class="mt-4">
+                <h5>Update Order Status</h5>
+                <form method="POST" action="{{ url_for('admin_update_order_status', order_id=order.order_id) }}">
+                    <div class="form-row align-items-center">
+                        <div class="col-auto">
+                            <select name="status" class="form-control">
+                                <option value="Processing" {% if order.status == 'Processing' %}selected{% endif %}>Processing</option>
+                                <option value="Shipped" {% if order.status == 'Shipped' %}selected{% endif %}>Shipped</option>
+                                <option value="Completed" {% if order.status == 'Completed' %}selected{% endif %}>Completed</option>
+                                <option value="Cancelled" {% if order.status == 'Cancelled' %}selected{% endif %}>Cancelled</option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Update Status</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

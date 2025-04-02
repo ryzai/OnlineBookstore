@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}{{ book.title }}{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <img src="https://via.placeholder.com/300x450" class="img-fluid rounded" alt="{{ book.title }}">
+    </div>
+    <div class="col-md-8">
+        <h2>{{ book.title }}</h2>
+        <p class="text-muted">by {{ book.author }}</p>
+        <p><strong>Price:</strong> ${{ "%.2f"|format(book.price) }}</p>
+        <p><strong>Genre:</strong> {{ book.genre }}</p>
+        <p><strong>Availability:</strong> 
+            <span class="badge bg-{{ 'success' if book.stock_quantity > 0 else 'danger' }}">
+                {{ book.stock_quantity }} in stock
+            </span>
+        </p>
+        
+        <div class="mb-4">
+            <h4>Description</h4>
+            <p>{{ book.description or "No description available." }}</p>
+        </div>
+        
+        {% if book.stock_quantity > 0 %}
+        <form method="POST" action="{{ url_for('add_to_cart') }}">
+            <input type="hidden" name="book_id" value="{{ book._id }}">
+            <div class="row g-3 align-items-center">
+                <div class="col-auto">
+                    <label for="quantity" class="col-form-label">Quantity:</label>
+                </div>
+                <div class="col-auto">
+                    <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" max="{{ book.stock_quantity }}">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Add to Cart</button>
+                </div>
+            </div>
+        </form>
+        {% else %}
+        <button class="btn btn-secondary" disabled>Out of Stock</button>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

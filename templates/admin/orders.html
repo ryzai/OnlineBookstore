@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Admin - Orders{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <h2 class="mb-4">Manage Orders</h2>
+    
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td><a href="{{ url_for('admin_order_detail', order_id=order._id) }}">{{ order._id|truncate(8) }}</a></td>
+                            <td>{{ order.order_date.strftime('%Y-%m-%d') }}</td>
+                            <td>{{ order.user_id }}</td>
+                            <td>{{ order.items|length }}</td>
+                            <td>${{ "%.2f"|format(order.total_amount) }}</td>
+                            <td>
+                                <span class="badge bg-{{ 'success' if order.status == 'Completed' else 'warning' }}">
+                                    {{ order.status }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin_order_detail', order_id=order._id) }}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ url_for('admin_edit_order', order_id=order._id) }}" class="btn btn-sm btn-secondary">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

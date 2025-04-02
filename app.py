@@ -12,6 +12,47 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '').repla
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+@app.before_first_request
+def initialize_database():
+    try:
+        db.create_all()
+        
+        # Create admin user if none exists
+        if not User.query.filter_by(is_admin=True).first():
+            admin = User(
+                name='Admin User',
+                email='admin@bookstore.com',
+                password=generate_password_hash('admin123'),
+                is_admin=True
+            )
+            db.session.add(admin)
+            db.session.commit()
+            
+        # Create sample customer if none exists
+        if not User.query.filter_by(is_admin=False).first():
+            customer = User(
+                name='John Customer',
+                email='customer@example.com',
+                password=generate_password_hash('customer123'),
+                address='123 Main St, Anytown, USA'
+            )
+            db.session.add(customer)
+            db.session.commit()
+            
+        # Create sample books if none exist
+        if not Book.query.first():
+            sample_books = [
+                Book(title='The Great Gatsby', author='F. Scott Fitzgerald', price=12.99, genre='Classic', stock_quantity=50),
+                Book(title='To Kill a Mockingbird', author='Harper Lee', price=10.99, genre='Fiction', stock_quantity=30),
+                Book(title='1984', author='George Orwell', price=9.99, genre='Dystopian', stock_quantity=25),
+                Book(title='Pride and Prejudice', author='Jane Austen', price=8.99, genre='Romance', stock_quantity=40),
+                Book(title='The Hobbit', author='J.R.R. Tolkien', price=14.99, genre='Fantasy', stock_quantity=35)
+            ]
+            db.session.bulk_save_objects(sample_books)
+            db.session.commit()
+            
+    except Exception as e:
+        print(f"Database initialization failed: {str(e)}")
 
 # User Model
 class User(db.Model):

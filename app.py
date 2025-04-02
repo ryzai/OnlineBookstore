@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
-from flask_mysqldb import MySQL
-import MySQLdb.cursors
+from flask_sqlalchemy import SQLAlchemy
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -8,15 +7,11 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-# MySQL configuration for Render
-app.config['MYSQL_HOST'] = os.environ.get('MYSQLHOST')
-app.config['MYSQL_USER'] = os.environ.get('MYSQLUSER')
-app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQLPASSWORD')
-app.config['MYSQL_DB'] = os.environ.get('MYSQLDATABASE')
-app.config['MYSQL_PORT'] = int(os.environ.get('MYSQLPORT', '3306'))
-app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
+# SQL configuration for Render
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', '').replace('postgres://', 'postgresql://')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-mysql = MySQL(app)
+db = SQLAlchemy(app)
 
 
 # ========================

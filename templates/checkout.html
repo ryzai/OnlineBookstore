@@ -3,60 +3,49 @@
 {% block title %}Checkout{% endblock %}
 
 {% block content %}
+<h2 class="mb-4">Checkout</h2>
+
 <div class="row">
     <div class="col-md-8">
         <div class="card mb-4">
             <div class="card-header">
-                <h4>Shipping Information</h4>
+                <h5>Order Summary</h5>
             </div>
             <div class="card-body">
-                <form method="POST" action="{{ url_for('checkout') }}">
+                <ul class="list-group list-group-flush">
+                    {% for item in cart_items %}
+                    <li class="list-group-item">
+                        {{ item.book.title }} (x{{ item.quantity }}) - ${{ "%.2f"|format(item.book.price * item.quantity) }}
+                    </li>
+                    {% endfor %}
+                    <li class="list-group-item fw-bold">
+                        Total: ${{ "%.2f"|format(total_amount) }}
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Shipping Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('process_checkout') }}">
                     <div class="mb-3">
                         <label for="name" class="form-label">Full Name</label>
-                        <input type="text" class="form-control" id="name" name="name" value="{{ current_user.name }}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}" required>
+                        <input type="text" class="form-control" id="name" name="name" 
+                               value="{{ current_user.name }}" required>
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Shipping Address</label>
                         <textarea class="form-control" id="address" name="address" rows="3" required>{{ current_user.address }}</textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="payment" class="form-label">Payment Method</label>
-                        <select class="form-select" id="payment" name="payment" required>
-                            <option value="">Select payment method</option>
-                            <option value="credit_card">Credit Card</option>
-                            <option value="paypal">PayPal</option>
-                        </select>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Place Order</button>
                     </div>
-                    <button type="submit" class="btn btn-primary">Place Order</button>
                 </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card">
-            <div class="card-header">
-                <h4>Order Summary</h4>
-            </div>
-            <div class="card-body">
-                <ul class="list-group list-group-flush">
-                    {% for item in cart_items %}
-                    <li class="list-group-item d-flex justify-content-between">
-                        <div>
-                            {{ item.title }}
-                            <small class="text-muted d-block">Qty: {{ item.quantity }}</small>
-                        </div>
-                        <span>${{ "%.2f"|format(item.price * item.quantity) }}</span>
-                    </li>
-                    {% endfor %}
-                    <li class="list-group-item d-flex justify-content-between fw-bold">
-                        <span>Total</span>
-                        <span>${{ "%.2f"|format(total) }}</span>
-                    </li>
-                </ul>
             </div>
         </div>
     </div>

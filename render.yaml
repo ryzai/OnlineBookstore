@@ -8,28 +8,13 @@ services:
   - type: web
     name: online-bookstore
     runtime: python
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install -r requirements.txt
     startCommand: gunicorn app:app
     envVars:
       - key: SECRET_KEY
         generateValue: true
-      - key: MYSQLHOST
+      - key: DATABASE_URL
         fromDatabase:
           name: bookstore_db
-          property: host
-      - key: MYSQLUSER
-        fromDatabase:
-          name: bookstore_db
-          property: user
-      - key: MYSQLPASSWORD
-        fromDatabase:
-          name: bookstore_db
-          property: password
-      - key: MYSQLDATABASE
-        fromDatabase:
-          name: bookstore_db
-          property: database
-      - key: MYSQLPORT
-        fromDatabase:
-          name: bookstore_db
-          property: port
+          property: connectionString

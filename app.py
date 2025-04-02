@@ -6,11 +6,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = os.environ.get('SECRET_KEY', 'dev-secret-key')
 
-
-
+# MySQL configuration for Render
+app.config['MYSQL_HOST'] = os.environ.get('MYSQLHOST')
+app.config['MYSQL_USER'] = os.environ.get('MYSQLUSER')
+app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQLPASSWORD')
+app.config['MYSQL_DB'] = os.environ.get('MYSQLDATABASE')
+app.config['MYSQL_PORT'] = int(os.environ.get('MYSQLPORT', '3306'))
+app.config['MYSQL_CURSORCLASS'] = 'DictCursor'
 
 mysql = MySQL(app)
+
 
 # ========================
 # Frontend Routes

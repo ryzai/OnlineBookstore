@@ -6,13 +6,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY') or 'dev-secret-key'
 
-# MySQL configuration
-app.config['MYSQL_HOST'] = os.environ.get('MYSQL_HOST') or 'localhost'
-app.config['MYSQL_USER'] = os.environ.get('MYSQL_USER') or 'root'
-app.config['MYSQL_PASSWORD'] = os.environ.get('MYSQL_PASSWORD') or ''
-app.config['MYSQL_DB'] = os.environ.get('MYSQL_DB') or 'online_bookstore'
+
+
 
 mysql = MySQL(app)
 

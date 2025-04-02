@@ -1,50 +1,120 @@
-/* Base styles */
+/* General Styles */
 body {
+    padding-top: 56px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f8f9fa;
 }
 
+/* Navbar Styles */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.navbar-brand {
+    font-weight: 700;
+}
+
+/* Card Styles */
 .card {
-    transition: transform 0.3s ease;
-    margin-bottom: 20px;
+    border: none;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    margin-bottom: 1.5rem;
+    transition: transform 0.3s;
 }
 
 .card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
 }
 
-.hero-section {
-    background-color: #e9ecef;
-    border-radius: 0.5rem;
+.card-header {
+    background-color: #f8f9fc;
+    border-bottom: 1px solid #e3e6f0;
 }
 
-/* Navbar styles */
-.navbar-brand {
-    font-weight: bold;
+/* Button Styles */
+.btn {
+    border-radius: 0.35rem;
+    padding: 0.5rem 1rem;
 }
 
-/* Book card styles */
-.book-card .card-img-top {
-    height: 300px;
-    object-fit: cover;
+/* Table Styles */
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
 }
 
-/* Cart styles */
+.table th {
+    border-top: none;
+    border-bottom: 1px solid #e3e6f0;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: #5a5c69;
+}
+
+/* Form Styles */
+.form-control {
+    border-radius: 0.35rem;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d3e2;
+}
+
+.form-control:focus {
+    border-color: #bac8f3;
+    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+}
+
+/* Badge Styles */
+.badge {
+    font-weight: 500;
+    padding: 0.35em 0.65em;
+    font-size: 0.75em;
+}
+
+/* Alert Styles */
+.alert {
+    border-radius: 0.35rem;
+}
+
+/* Book Card Styles */
+.book-card {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0,0,0,.125);
+}
+
+.book-card:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.book-card-img {
+    height: 200px;
+    object-fit: contain;
+    padding: 10px;
+}
+
+/* Cart Styles */
 .cart-item-img {
     width: 50px;
-    height: 75px;
-    object-fit: cover;
+    height: auto;
 }
 
-/* Admin dashboard stats */
-.card-stats {
-    border-radius: 0.5rem;
+/* Admin Dashboard Styles */
+.card-icon {
+    font-size: 2rem;
+    opacity: 0.3;
 }
 
-/* Responsive adjustments */
+/* Responsive Styles */
 @media (max-width: 768px) {
-    .book-card {
-        margin-bottom: 20px;
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .table-responsive {
+        display: block;
+        width: 100%;
+        overflow-x: auto;
     }
 }

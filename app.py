@@ -13,7 +13,58 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
+# User Model
+class User(db.Model):
+    __tablename__ = 'users'
+    user_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    address = db.Column(db.Text)
+    is_admin = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
+# Book Model
+class Book(db.Model):
+    __tablename__ = 'books'
+    book_id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255), nullable=False)
+    author = db.Column(db.String(100), nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+    genre = db.Column(db.String(50))
+    stock_quantity = db.Column(db.Integer, default=0)
+    description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+# Order Model
+class Order(db.Model):
+    __tablename__ = 'orders'
+    order_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id', ondelete='CASCADE'), nullable=False)
+    order_date = db.Column(db.DateTime, default=datetime.utcnow)
+    total_amount = db.Column(db.Numeric(10, 2), nullable=False)
+    status = db.Column(db.String(20), default='Processing')
+    user = db.relationship('User', backref='orders')
+
+# Order Item Model
+class OrderItem(db.Model):
+    __tablename__ = 'order_items'
+    order_id = db.Column(db.Integer, db.ForeignKey('orders.order_id', ondelete='CASCADE'), primary_key=True)
+    book_id = db.Column(db.Integer, db.ForeignKey('books.book_id', ondelete='CASCADE'), primary_key=True)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Numeric(10, 2), nullable=False)
+    book = db.relationship('Book')
+
+# Shopping Cart Model
+class ShoppingCart(db.Model):
+    __tablename__ = 'shopping_cart'
+    cart_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id', ondelete='CASCADE'), nullable=False)
+    book_id = db.Column(db.Integer, db.ForeignKey('books.book_id', ondelete='CASCADE'), nullable=False)
+    quantity = db.Column(db.Integer, default=1)
+    user = db.relationship('User', backref='cart_items')
+    book = db.relationship('Book')
+    __table_args__ = (db.UniqueConstraint('user_id', 'book_id'),)
 # ========================
 # Frontend Routes
 # ========================

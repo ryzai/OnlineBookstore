@@ -3,30 +3,23 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="hero-section bg-light p-5 rounded-lg mb-5">
-    <div class="row align-items-center">
-        <div class="col-md-6">
-            <h1 class="display-4">Welcome to Our Online Bookstore</h1>
-            <p class="lead">Discover your next favorite book from our extensive collection.</p>
-            <a href="{{ url_for('book_list') }}" class="btn btn-primary btn-lg">Browse Books</a>
-        </div>
-        <div class="col-md-6">
-            <img src="https://via.placeholder.com/600x400" alt="Bookstore" class="img-fluid rounded">
-        </div>
+<div class="row mb-4">
+    <div class="col-md-12">
+        <h2>Featured Books</h2>
     </div>
 </div>
 
-<h2 class="mb-4">Featured Books</h2>
 <div class="row">
     {% for book in featured_books %}
     <div class="col-md-3 mb-4">
         <div class="card h-100">
-            <img src="https://via.placeholder.com/200x300" class="card-img-top" alt="{{ book.title }}">
+            <img src="{{ book.image_url or url_for('static', filename='images/book-placeholder.png') }}" 
+                 class="card-img-top" alt="{{ book.title }}">
             <div class="card-body">
                 <h5 class="card-title">{{ book.title }}</h5>
-                <p class="card-text text-muted">by {{ book.author }}</p>
+                <p class="card-text text-muted">{{ book.author }}</p>
                 <p class="card-text">${{ "%.2f"|format(book.price) }}</p>
-                <a href="{{ url_for('book_detail', book_id=book._id) }}" class="btn btn-outline-primary">View Details</a>
+                <a href="{{ url_for('book_detail', book_id=book.id) }}" class="btn btn-primary">View Details</a>
             </div>
         </div>
     </div>
